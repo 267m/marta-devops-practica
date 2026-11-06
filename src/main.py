@@ -39,7 +39,11 @@ def preparar_entorno() -> None:
 
     def instalar(python: Path) -> None:
         print(">> Instalando requirements.txt en .venv (solo la primera vez)...")
-        subprocess.check_call([str(python), "-m", "pip", "install", "-r", str(BASE_DIR / "requirements.txt")])
+        # requirements.txt está en la raíz del repositorio (carpeta padre de src/)
+        requirements = BASE_DIR / "requirements.txt"
+        if not requirements.exists():
+            requirements = BASE_DIR.parent / "requirements.txt"
+        subprocess.check_call([str(python), "-m", "pip", "install", "-r", str(requirements)])
 
     if Path(sys.prefix).resolve() == venv_dir.resolve():  # ya estamos dentro del .venv
         if not dependencias_ok(Path(sys.executable)):

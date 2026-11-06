@@ -1,0 +1,25 @@
+# Ficheros y carpetas que NO se envían al contexto de construcción de la imagen
+__pycache__/
+*.pyc
+.git
+.gitignore
+.venv
+venv/
+.pytest_cache/
+.DS_Store
+tests/
+
+# Las mismas reglas aplicadas también dentro de src/ (subcarpetas)
+**/__pycache__/
+**/*.pyc
+**/.venv
+**/venv/
+**/.pytest_cache/
+**/.DS_Store
+
+# Ficheros que no hacen falta dentro de la imagen
+.env
+.dockerignore
+dockerfile
+README.md
+src/Ejecutar_tienda.bat
