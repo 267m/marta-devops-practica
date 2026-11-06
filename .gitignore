@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Entornos virtuales
+.venv/
+venv/
+
+# Secretos / variables de entorno locales (no se suben)
+.env
+
+# Sistema
+.DS_Store
+Thumbs.db
