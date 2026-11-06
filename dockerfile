@@ -18,6 +18,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 # d. Copia del código fuente
 COPY src/ .
 
+# e. Usuario sin privilegios y permisos para que pueda ejecutar el código
+RUN useradd --create-home --shell /usr/sbin/nologin appuser \
+    && chown -R appuser:appuser /app \
+    && chmod -R u+rwX,go+rX /app
+USER appuser
+
 # Puerto en el que escucha la API
 EXPOSE 8000
 
