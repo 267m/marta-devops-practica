@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tienda Online</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="cabecera">
+    <div class="marca">
+      <span class="logo">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      </span>
+      <div>
+        <h1>Tienda Online</h1>
+        <p>Frontend que consume la API REST de FastAPI</p>
+      </div>
+    </div>
+    <form id="form-servidor" class="servidor" title="Dirección de la API (cámbiala para usar la API de otro equipo)">
+      <label for="api-url">Servidor API</label>
+      <input id="api-url" type="text" spellcheck="false">
+      <button type="submit">Conectar</button>
+      <span id="estado-api" class="estado">…</span>
+    </form>
+  </header>
+
+  <nav class="pestanas">
+    <button class="pestana activa" data-seccion="productos">Productos</button>
+    <button class="pestana" data-seccion="usuarios">Usuarios</button>
+    <button class="pestana" data-seccion="nuevo-pedido">Nuevo pedido</button>
+    <button class="pestana" data-seccion="pedidos">Pedidos de un usuario</button>
+  </nav>
+
+  <main>
+    <!-- ============================ PRODUCTOS ============================ -->
+    <section id="productos" class="seccion activa">
+      <div class="columnas">
+        <div>
+          <div class="titulo-seccion">
+            <h2>Catálogo</h2>
+            <div class="filtros">
+              <select id="filtro-tipo">
+                <option value="">Todos</option>
+                <option value="generico">Genéricos</option>
+                <option value="electronico">Electrónica</option>
+                <option value="ropa">Ropa</option>
+              </select>
+              <button class="secundario" id="recargar-productos">Recargar</button>
+            </div>
+          </div>
+          <div id="lista-productos" class="rejilla"></div>
+        </div>
+
+        <aside class="panel">
+          <h2>Nuevo producto</h2>
+          <form id="form-producto">
+            <label>Tipo
+              <select name="tipo" id="producto-tipo">
+                <option value="generico">Genérico</option>
+                <option value="electronico">Electrónico</option>
+                <option value="ropa">Ropa</option>
+              </select>
+            </label>
+            <label>Nombre <input name="nombre" required></label>
+            <div class="fila">
+              <label>Precio (€) <input name="precio" type="number" step="0.01" min="0.01" required></label>
+              <label>Stock <input name="stock" type="number" min="0" step="1" required></label>
+            </div>
+            <div class="solo-electronico oculto">
+              <label>Meses de garantía <input name="meses_garantia" type="number" min="0" step="1"></label>
+            </div>
+            <div class="fila solo-ropa oculto">
+              <label>Talla <input name="talla"></label>
+              <label>Color <input name="color"></label>
+            </div>
+            <button type="submit">Crear producto</button>
+          </form>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ============================ USUARIOS ============================= -->
+    <section id="usuarios" class="seccion">
+      <div class="columnas">
+        <div>
+          <div class="titulo-seccion">
+            <h2>Usuarios registrados</h2>
+            <button class="secundario" id="recargar-usuarios">Recargar</button>
+          </div>
+          <table class="tabla">
+            <thead><tr><th>ID</th><th>Nombre</th><th>Email</th><th>Rol</th></tr></thead>
+            <tbody id="tabla-usuarios"></tbody>
+          </table>
+        </div>
+
+        <aside class="panel">
+          <h2>Nuevo usuario</h2>
+          <form id="form-usuario">
+            <label>Nombre <input name="nombre" required></label>
+            <label>Email <input name="email" type="email" required></label>
+            <label>Tipo
+              <select name="tipo">
+                <option value="cliente">Cliente</option>
+                <option value="administrador">Administrador</option>
+              </select>
+            </label>
+            <label>Dirección postal <input name="direccion_postal"></label>
+            <button type="submit">Crear usuario</button>
+          </form>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ========================== NUEVO PEDIDO =========================== -->
+    <section id="nuevo-pedido" class="seccion">
+      <div class="panel ancho">
+        <h2>Crear un pedido</h2>
+        <form id="form-pedido">
+          <label>Cliente
+            <select id="pedido-cliente" required></select>
+          </label>
+
+          <h3>Productos del pedido</h3>
+          <div id="lineas-pedido"></div>
+          <button type="button" class="secundario" id="anadir-linea">+ Añadir producto</button>
+
+          <div class="resumen">
+            <span>Total estimado</span>
+            <strong id="total-pedido">0,00 €</strong>
+          </div>
+          <button type="submit">Confirmar pedido</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ======================= PEDIDOS DE UN USUARIO ===================== -->
+    <section id="pedidos" class="seccion">
+      <div class="titulo-seccion">
+        <h2>Pedidos de un usuario</h2>
+        <div class="filtros">
+          <select id="pedidos-usuario"></select>
+          <button id="ver-pedidos">Ver pedidos</button>
+        </div>
+      </div>
+      <div id="lista-pedidos"></div>
+    </section>
+  </main>
+
+  <div id="avisos" class="avisos" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
